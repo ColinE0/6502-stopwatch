@@ -105,15 +105,7 @@ graph TD
 *Built by hand on breadboards from individual components, using Ben Eater's 6502 video series as a reference.*
 
 ## Build & Flash
-```bash
-git clone https://github.com/ColinE0/6502-stopwatch.git
-cd 6502-stopwatch
-
-# Assemble to a raw binary
-vasm6502_oldstyle -wdc02 -Fbin -dotdir -o timer.bin timer.s
-```
-Flash `timer.bin` to the EEPROM. Code is assembled at `$8000`; the reset / IRQ / NMI vectors
-live at `$FFFA` to `$FFFF`.
+Assemble `timer.s` with the vasm 6502 assembler to produce a raw binary, then flash it to the EEPROM. The code assembles at `$8000`, with the reset, IRQ, and NMI vectors at `$FFFA` to `$FFFF`.
 
 ## Technical Details
 
@@ -157,5 +149,4 @@ live at `$FFFA` to `$FFFF`.
 
 ## License
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
