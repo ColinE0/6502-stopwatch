@@ -1,10 +1,9 @@
-# 6502 Stopwatch: Interrupt-Driven MM:SS Timer
-![CPU](https://img.shields.io/badge/CPU-WDC_W65C02-2C3E50)
-![Language](https://img.shields.io/badge/Language-6502_Assembly-525252)
-![I/O](https://img.shields.io/badge/I%2FO-W65C22_VIA-1ABC9C)
-![Display](https://img.shields.io/badge/Display-HD44780_16x2_LCD-6C5CE7)
-![Reference](https://img.shields.io/badge/Reference-Ben_Eater_series-E67E22)
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
+# Interrupt-Driven 6502 Stopwatch
+![6502 Assembly](https://img.shields.io/badge/6502_Assembly-525252)
+![vasm](https://img.shields.io/badge/Assembler-vasm-2C3E50)
+![CPU](https://img.shields.io/badge/CPU-WDC_W65C02-1ABC9C)
+![I/O](https://img.shields.io/badge/I%2FO-W65C22_VIA-6C5CE7)
+![Display](https://img.shields.io/badge/Display-HD44780_16x2-E67E22)
 
 A bare-metal stopwatch for a breadboard 6502 computer, written in hand-assembled 6502 assembly.
 It counts **MM:SS** on a 16x2 character LCD and resets to **00:00** on a hardware button press.
@@ -21,7 +20,7 @@ This project demonstrates:
 - **A power-aware main loop** that halts the CPU with `WAI` and repaints only on change
 
 ## Table of Contents
-- [Features](#features)
+- [Key Features](#key-features)
 - [How It Works](#how-it-works)
 - [Architecture](#architecture)
 - [Repository Structure](#repository-structure)
@@ -31,7 +30,7 @@ This project demonstrates:
 - [Skills Demonstrated](#skills-demonstrated)
 - [License](#license)
 
-## Features
+## Key Features
 
 ### ⏱️ Interrupt-Driven Timekeeping
 - VIA Timer 1 free-runs and interrupts every **10 ms** (`$270E + 2 = 10,000` cycles at 1 MHz)
@@ -89,9 +88,9 @@ graph TD
 ```
 .
 ├── timer.s        # 6502 assembly source (stopwatch firmware)
-├── README.md      # This documentation
-├── .gitignore     # Ignores build artifacts (*.bin)
-└── LICENSE        # MIT License
+├── 📄 README.md   # This documentation
+├── 📄 .gitignore  # Ignores build artifacts (*.bin)
+└── 📄 LICENSE     # MIT License
 ```
 
 ## Hardware
@@ -105,7 +104,15 @@ graph TD
 *Built by hand on breadboards from individual components, using Ben Eater's 6502 video series as a reference.*
 
 ## Build & Flash
-Assemble `timer.s` with the vasm 6502 assembler to produce a raw binary, then flash it to the EEPROM. The code assembles at `$8000`, with the reset, IRQ, and NMI vectors at `$FFFA` to `$FFFF`.
+The firmware assembles at `$8000` into a 32K image for an AT28C256 EEPROM, with the reset, IRQ, and NMI vectors at `$FFFA` to `$FFFF`.
+
+```bash
+# Assemble to a raw 32K ROM image (-wdc02 enables the W65C02 WAI/STZ instructions)
+vasm6502_oldstyle -wdc02 -Fbin -dotdir -o timer.bin timer.s
+
+# Flash to the EEPROM
+minipro -p AT28C256 -w timer.bin
+```
 
 ## Technical Details
 
