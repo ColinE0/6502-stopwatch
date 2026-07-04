@@ -17,10 +17,12 @@ E  = %10000000
 RW = %01000000
 RS = %00100000
 
-ticks   = $00
-seconds = $01
-minutes = $02
-redraw  = $03
+ticks    = $00
+seconds  = $01
+minutes  = $02
+redraw   = $03
+disp_min = $04
+disp_sec = $05
 
   .org $8000
 
@@ -122,13 +124,20 @@ nmi:
   rti                   ; unused
 
 render:
+  php                   ; snapshot the time with irqs masked so a tick can't
+  sei                   ; land between the two reads and draw a torn MM:SS
+  lda minutes           ; at a rollover
+  sta disp_min
+  lda seconds
+  sta disp_sec
+  plp
   lda #%00000010        ; cursor home
   jsr lcd_instruction
-  lda minutes
+  lda disp_min
   jsr print_2digits
   lda #':'
   jsr print_char
-  lda seconds
+  lda disp_sec
   jsr print_2digits
   rts
 
